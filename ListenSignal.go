@@ -1,14 +1,12 @@
 package main
 
 import (
-	"os"
 	"os/signal"
 	"syscall"
 	"fmt"
 )
 
 func ListenSignal()  {
-	c = make(chan os.Signal)
 	signal.Notify(c)
 	for {
 		sig := <-c

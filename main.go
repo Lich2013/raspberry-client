@@ -3,19 +3,29 @@ package main
 import (
 	"os"
 	"fmt"
+	"sync"
 )
 
 var (
-	exitCode int = 0
-	c        chan os.Signal
-	done     chan int
+	exitCode int             = 0
+	c        chan os.Signal  = make(chan os.Signal)
+	done     chan int        = make(chan int)
+	Conf     *Config         = new(Config)
+	wg       *sync.WaitGroup = new(sync.WaitGroup)
 )
 
-func main() {
-	done = make(chan int)
+func InitAll() {
 	go ListenSignal()
 	go Pull()
 	go PrintLog()
+}
+
+func main() {
+	wg.Add(1)
+	InitConfig()
+	wg.Wait()
+	go InitAll()
+
 	if _, ok := <-done; !ok {
 		fmt.Println("Bye")
 	}
