@@ -15,6 +15,7 @@ func main() {
 	done = make(chan int)
 	go ListenSignal()
 	go Pull()
+	go PrintLog()
 	if _, ok := <-done; !ok {
 		fmt.Println("Bye")
 	}
