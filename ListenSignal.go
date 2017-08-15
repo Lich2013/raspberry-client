@@ -15,6 +15,9 @@ func ListenSignal()  {
 		if sig == syscall.SIGINT || sig == syscall.SIGTERM {
 			exitCode = 0
 		}
+		if sig == syscall.SIGCHLD {
+			continue
+		}
 		close(done)
 	}
 }

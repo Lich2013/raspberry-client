@@ -45,7 +45,9 @@ func Pull() {
 		taskList := new(Result)
 		json.Unmarshal(body, taskList)
 		resp.Body.Close()
-		fmt.Println(taskList.Data)
+		for _, x := range taskList.Data {
+			TaskChan <- x
+		}
 		time.Sleep(10 * time.Second)
 	}
 }

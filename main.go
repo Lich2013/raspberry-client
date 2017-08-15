@@ -18,6 +18,7 @@ func InitAll() {
 	go ListenSignal()
 	go Pull()
 	go PrintLog()
+	go CallService()
 }
 
 func main() {
