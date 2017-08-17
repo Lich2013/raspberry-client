@@ -4,20 +4,21 @@ import (
 	"os/signal"
 	"syscall"
 	"fmt"
+	"raspberry-client/g"
 )
 
 func ListenSignal()  {
-	signal.Notify(c)
+	signal.Notify(g.C)
 	for {
-		sig := <-c
+		sig := <-g.C
 		fmt.Println(sig)
-		exitCode = 2
+		g.ExitCode = 2
 		if sig == syscall.SIGINT || sig == syscall.SIGTERM {
-			exitCode = 0
+			g.ExitCode = 0
 		}
 		if sig == syscall.SIGCHLD {
 			continue
 		}
-		close(done)
+		close(g.Done)
 	}
 }

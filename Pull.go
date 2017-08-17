@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"io/ioutil"
 	"encoding/json"
+	"raspberry-client/g"
 )
 
 var (
@@ -13,20 +14,14 @@ var (
 	PullURL string
 )
 
-type Task struct {
-	TaskName   string `json:"task_name"`
-	TaskType   string `json:"task_type"`
-	TaskDetail string `json:"task_detail"`
-	TaskId     string `json:"task_id"`
-}
 type Result struct {
-	Data   []Task        `json:"data"`
+	Data   []g.Task        `json:"data"`
 	Msg    string        `json:"msg"`
 	Status int           `json:"status"`
 }
 
 func RegisterURL() {
-	host = Conf.Schema + "://" + Conf.Host
+	host = g.Conf.Schema + "://" + g.Conf.Host
 	PullURL = host + "/tasklist"
 }
 
@@ -36,17 +31,21 @@ func Pull() {
 		fmt.Println(time.Now())
 		resp, err := http.Get(PullURL)
 		if err != nil {
-			LogFatal <- err.Error()
+			g.LogFatal <- err.Error()
+			time.Sleep(10 * time.Second)
+			continue
 		}
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			LogFatal <- err.Error()
+			g.LogFatal <- err.Error()
+			time.Sleep(10 * time.Second)
+			continue
 		}
 		taskList := new(Result)
 		json.Unmarshal(body, taskList)
 		resp.Body.Close()
 		for _, x := range taskList.Data {
-			TaskChan <- x
+			g.TaskChan <- x
 		}
 		time.Sleep(10 * time.Second)
 	}

@@ -3,15 +3,7 @@ package main
 import (
 	"os"
 	"fmt"
-	"sync"
-)
-
-var (
-	exitCode int             = 0
-	c        chan os.Signal  = make(chan os.Signal)
-	done     chan int        = make(chan int)
-	Conf     *Config         = new(Config)
-	wg       *sync.WaitGroup = new(sync.WaitGroup)
+	"raspberry-client/g"
 )
 
 func InitAll() {
@@ -22,13 +14,11 @@ func InitAll() {
 }
 
 func main() {
-	wg.Add(1)
-	InitConfig()
-	wg.Wait()
+	g.Init()
 	go InitAll()
 
-	if _, ok := <-done; !ok {
+	if _, ok := <-g.Done; !ok {
 		fmt.Println("Bye")
 	}
-	os.Exit(exitCode)
+	os.Exit(g.ExitCode)
 }

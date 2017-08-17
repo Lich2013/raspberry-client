@@ -1,4 +1,4 @@
-package main
+package g
 
 import (
 	"github.com/BurntSushi/toml"
@@ -6,17 +6,13 @@ import (
 	"os"
 )
 
-
-type Config struct {
-	Schema string `toml:"schema"`
-	Host string `toml:"host"`
-}
-
 func InitConfig() {
 	_, err := toml.DecodeFile("./conf/dev.toml", Conf)
 	if err != nil {
 		fmt.Fprint(os.Stderr, err)
 	}
-	fmt.Println(Conf)
-	wg.Done()
+}
+
+func Init()  {
+	InitConfig()
 }
