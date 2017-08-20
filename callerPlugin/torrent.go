@@ -19,7 +19,6 @@ func CallAria2c(x g.Task) {
 		g.LogFatal <- fmt.Sprintf("task %+v faild, error is %s", x, err.Error())
 		return
 	}
+	g.ReciveTaskChan <- x
 	g.LogInfo <- fmt.Sprintf("task %+v success, task id is %s", x, ret)
-	fmt.Println(x)
-
 }

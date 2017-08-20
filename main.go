@@ -11,6 +11,7 @@ func InitAll() {
 	go Pull()
 	go PrintLog()
 	go CallService()
+	go Confirm()
 }
 
 func main() {

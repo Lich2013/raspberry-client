@@ -13,17 +13,19 @@ var (
 	Conf     *Config         = new(Config)
 	Wg       *sync.WaitGroup = new(sync.WaitGroup)
 	TaskChan chan Task       = make(chan Task, 100)
+	ReciveTaskChan chan Task = make(chan Task, 100)
 
 	LogInfo      chan string    = make(chan string, 100)
 	LogFatal     chan string    = make(chan string, 100)
 	LogPath      string         = "/tmp/raspberry-client"
 	LogInfoFile  string         = LogPath + "/raspberry-info.log"
 	LogFatalFile string         = LogPath + "/raspberry-fatal.log"
+
 	RPC          *aria2cRPC.RPC = aria2cRPC.RPC{}.Init("xiapian", "raspberry.lich.moe:6800")
+
 )
 
 type Config struct {
-	Schema string `toml:"schema"`
 	Host   string `toml:"host"`
 }
 
