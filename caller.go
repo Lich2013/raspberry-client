@@ -10,7 +10,8 @@ import (
 func CallService() {
 	for x := range g.TaskChan {
 		switch (x.TaskType) {
-		case "Torrent":
+		case "torrent":
+			fmt.Println("call", x)
 			go callerPlugin.CallAria2c(x)
 		default:
 			g.LogFatal <- fmt.Sprintf("unkonwn task %+v", x)

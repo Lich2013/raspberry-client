@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"raspberry-client/g"
 	"net/url"
-	"bytes"
 )
 
 var (
@@ -56,27 +55,21 @@ func Pull() {
 }
 
 func Confirm() {
-	for {
-		for x := range g.ReciveTaskChan {
-			form := url.Values{
-				"tasklist": []string{x.TaskId},
-			}
-			resp, err := http.Post(ConfirmURL, "application/x-www-form-urlencoded", bytes.NewBufferString(form.Encode()))
-			defer resp.Body.Close()
-			if err != nil {
-				fmt.Println(err.Error())
-				g.LogFatal <- err.Error()
-				continue
-			}
-			body, err := ioutil.ReadAll(resp.Body)
-			if err != nil {
-				fmt.Println(err.Error())
-				g.LogFatal <- err.Error()
-				continue
-			}
-			fmt.Println(string(body))
-			<-g.ReciveTaskChan
-
+	for x := range g.ReciveTaskChan {
+		resp, err := http.PostForm(ConfirmURL, url.Values{"tasklist[]": []string{x.TaskId}})
+		defer resp.Body.Close()
+		if err != nil {
+			fmt.Println(err.Error())
+			g.LogFatal <- err.Error()
+			continue
 		}
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Println(err.Error())
+			g.LogFatal <- err.Error()
+			continue
+		}
+		fmt.Println(string(body))
 	}
+	fmt.Println("confirm finish") // no possible to do
 }
