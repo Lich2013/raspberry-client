@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"raspberry-client/g"
 	"net/url"
+	"strings"
 )
 
 var (
@@ -30,9 +31,14 @@ func RegisterURL() {
 
 func Pull() {
 	RegisterURL()
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", PullURL, nil)
+	if err != nil {
+		g.LogFatal <- err.Error()
+	}
+	req.Header.Add("Token", g.Conf.Token)
 	for {
-		fmt.Println(time.Now())
-		resp, err := http.Get(PullURL)
+		resp, err := client.Do(req)
 		if err != nil {
 			g.LogFatal <- err.Error()
 			time.Sleep(10 * time.Second)
@@ -55,8 +61,13 @@ func Pull() {
 }
 
 func Confirm() {
+	client := &http.Client{}
 	for x := range g.ReciveTaskChan {
-		resp, err := http.PostForm(ConfirmURL, url.Values{"tasklist[]": []string{x.TaskId}})
+		form := url.Values{"tasklist[]": []string{x.TaskId}}
+		req, err := http.NewRequest("POST", ConfirmURL, strings.NewReader(form.Encode()))
+		req.Header.Add("Token", g.Conf.Token)
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		resp, err := client.Do(req)
 		defer resp.Body.Close()
 		if err != nil {
 			fmt.Println(err.Error())

@@ -27,6 +27,7 @@ var (
 
 type Config struct {
 	Host   string `toml:"host"`
+	Token   string `toml:"token"`
 }
 
 type Task struct {
