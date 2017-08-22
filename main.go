@@ -17,7 +17,6 @@ func InitAll() {
 func main() {
 	g.Init()
 	go InitAll()
-
 	if _, ok := <-g.Done; !ok {
 		fmt.Println("Bye")
 	}

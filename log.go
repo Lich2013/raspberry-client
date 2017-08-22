@@ -10,6 +10,9 @@ import (
 
 func PrintLog() {
 	//CheckAndCreatFile()
+	if _, err := os.Stat(g.LogPath); err != nil {
+		os.MkdirAll(g.LogPath, 0755)
+	}
 	fd1, err := os.OpenFile(g.LogInfoFile, os.O_RDWR | os.O_CREATE | os.O_APPEND, 0644)
 	fd2, err := os.OpenFile(g.LogFatalFile, os.O_RDWR | os.O_CREATE | os.O_APPEND, 0644)
 	defer fd1.Close()
